@@ -1,0 +1,10 @@
+.mainpage {
+    background-image: url("../starry-background.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}

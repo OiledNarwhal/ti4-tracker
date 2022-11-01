@@ -1,0 +1,17 @@
+.addgame__popout {
+    background-color: #2c0fa6;
+    width: 30%;
+    height: 100%;
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    color: white;
+}
+
+.addgame__popout form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

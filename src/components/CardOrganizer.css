@@ -1,0 +1,10 @@
+.cardorganizer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    column-gap: 15px;
+    padding-top: 5px;
+    width: 75%
+}
