@@ -1,0 +1,16 @@
+
+.addedplayer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 1rem;
+}
+
+.addedplayer label {
+    padding-top: 0rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.addedplayer button {
+    justify-self: flex-end;
+}

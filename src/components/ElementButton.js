@@ -2,6 +2,7 @@ function ElementButton(props) {
 
     function buttonClickHandler(event)
     {
+        //console.log('clicked');
         event.preventDefault();
         props.onClickHandler(props.title);
     }

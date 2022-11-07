@@ -2,7 +2,7 @@ import { useState } from "react"
 
 function ArrayAdder(props) {
     
-    const [input, setInput] = useState();
+    const [input, setInput] = useState("");
     
     function addClickHandler(event)
     {

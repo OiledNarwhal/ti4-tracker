@@ -1,12 +1,12 @@
 import CardOrganizer from "./CardOrganizer";
 import NavigationMenu from "./NavigationMenu";
 import AddGame from "./AddGame";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getDatabase, ref, onValue, child, get } from "firebase/database";
+import { getDatabase, ref, onValue, child, get, set } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -34,11 +34,37 @@ function MainPage() {
     let cards = [];
 
     const testRef = ref(database);
+
+    async function populateData()
+    {
+        
+        await get(child(testRef, 'games')).then((snapshot) => {
+            let cards = [];
+            if(snapshot.exists()) {
+                for(const game in snapshot.val())
+                {
+                    cards.push(snapshot.val()[game]);
+                };
+                //await cards = Object.entries(snapshot.val());
+            }
+            else {
+                console.log('No data available');
+            }
+            setGameList(cards);
+        }).catch((error => {
+            console.error(error);
+        }))
+        
+       console.log('here');
+       //setGameList(dummyCards);
+
+    }
+    /*
     get(child(testRef, 'games')).then((snapshot) => {
         if(snapshot.exists()) {
-            for(const property in snapshot.val())
+            for(const game in snapshot.val())
             {
-                console.log(property + ' = ' + snapshot.val()[property]);
+                console.log(snapshot.val()[game]);
             };
             //await cards = Object.entries(snapshot.val());
         }
@@ -47,7 +73,7 @@ function MainPage() {
         }
     }).catch((error => {
         console.error(error);
-    }))
+    }))*/
     /*
     const testRef = ref(database, 'test');
     onValue(testRef, (snapshot) => { 
@@ -82,8 +108,12 @@ function MainPage() {
             pointCount: 12,
         },
     ];
+    const [gameList, setGameList] = useState(undefined);
+    useEffect(() => {
+        populateData();
+    }, []);
 
-    const [gameList, setGameList] = useState(dummyCards);
+    //populateData(testRef);
 
     function addGameButtonHandler() {
         setAddingGame(true);
@@ -93,13 +123,14 @@ function MainPage() {
     }
 
     function addGameSubmitHandler(game) {
-        setGameList([...gameList, game]);
+        set(ref(database, 'games/game' + Math.round(Math.random() * 1000000000)), game);
+        //console.log('games/game' + Math.random());
+        populateData();
     }
-
-    return (
+        return (
         <div className='mainpage'>
             <NavigationMenu/>
-            <CardOrganizer cardList={gameList}/>
+            {gameList && <CardOrganizer cardList={gameList}/>}
             <button onClick={addGameButtonHandler} style={{alignSelf: 'flex-end'}}>Add</button>
             {addingGame && <AddGame closeHandler={closeAddGameHandler} submitHandler={addGameSubmitHandler}/>}
         </div>

@@ -7,7 +7,6 @@ import './CardOrganizer.css'
  * cardlist - array of card objects.
  */
 function CardOrganizer(props) {
-    
     return (
         <div className='cardorganizer'>
             {props.cardList.map(item => {
