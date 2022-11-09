@@ -25,7 +25,7 @@ function AddedPlayer(props) {
     function victorChangeHandler() {
         props.victorSelectHandler(playerInfo.name);
     }
-    const factionList = ["Federation of Sol", "The Arborec", "The Barony of Letnev"];
+    const factionList = props.factionList.sort();
 
     useEffect(() => {
         if(playerInfo.faction !== undefined)

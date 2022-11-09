@@ -31,7 +31,6 @@ function MainPage() {
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const database = getDatabase(app);
-    let cards = [];
 
     const testRef = ref(database);
 
@@ -48,12 +47,25 @@ function MainPage() {
                 //await cards = Object.entries(snapshot.val());
             }
             else {
-                console.log('No data available');
+                console.log('No game data available');
             }
             setGameList(cards);
         }).catch((error => {
             console.error(error);
         }))
+
+        await get(child(testRef, 'factionList')).then((snapshot) => {
+            let pulledFactions = [];
+            if(snapshot.exists()) {
+                pulledFactions = snapshot.val();
+            }
+            else {
+                console.log('No faction data');
+            }
+            setFactionList(pulledFactions);
+        }).catch((error) => {
+            console.log(error);
+        })
         
        console.log('here');
        //setGameList(dummyCards);
@@ -87,27 +99,36 @@ function MainPage() {
 
     let dummyCards = [
         {
-            title: "The Sun's Rise",
-            victor: "Muatt",
-            factions: ["Muatt", "Hacan", "Yin", "Argent", "Mahact", "Empyrean", "Sardakk Norr"],
-            players: ["Amy", "Bryce", "Matthew", "Stephen", "Jake", "Michael", "Max"],
-            pointCount: 12,
-        },
-        {
-            title: "The Age of Turtles",
-            victor: "Xxcha",
-            factions: ["Xxcha", "Nekro", "NRA", "Titans", "Barony", "???"],
-            players: ["Amy", "Bryce", "Matthew", "Stephen", "Jake", "???"],
-            pointCount: 14,
-        },
-        {
-            title: "The Sun's Rise",
-            victor: "Muatt",
-            factions: ["Muatt", "Hacan", "Yin", "Argent", "Mahact", "Empyrean", "Sardakk Norr"],
-            players: ["Amy", "Bryce", "Matthew", "Stephen", "Jake", "Michael", "Max"],
-            pointCount: 12,
-        },
+            title: "The Turtles Strike back",
+            date: "2022-07-14",
+            victor: "Stephen",
+            pointCount: "14",
+            players: [
+                {
+                    name: "Stephen",
+                    faction: "The Arborec"
+                },
+                {
+                    name: "Bryce",
+                    faction: "The Barony of Letnev"
+                },
+                {
+                    name: "Amy",
+                    faction: "Federation of Sol"
+                },
+                {
+                    name: "Matthew",
+                    faction: "The Arborec"
+                },
+                {
+                    name: "Jake",
+                    faction: "The Barony of Letnev"
+                }
+            ]
+        }
     ];
+
+    const [factionList, setFactionList] = useState(false);
     const [gameList, setGameList] = useState(undefined);
     useEffect(() => {
         populateData();
@@ -123,7 +144,56 @@ function MainPage() {
     }
 
     function addGameSubmitHandler(game) {
-        set(ref(database, 'games/game' + Math.round(Math.random() * 1000000000)), game);
+        set(ref(database, 'games/game' + gameList.length), game);
+        
+        //Update player information
+        game.players.forEach((item) => {
+            get(child(testRef, 'players/' + item.name)).then((snapshot) => { 
+                if(snapshot.exists()) {
+                    //Update info for the player. Will need to check factions played.
+                    let updatedPlayer = snapshot.val();
+                    updatedPlayer.gamesPlayed++;
+                    updatedPlayer.wins = game.victor === item.name ? updatedPlayer.wins + 1 : updatedPlayer.wins;
+                    const factionIndex = updatedPlayer.factionsPlayed.findIndex((dbFaction) => {
+                        return dbFaction.name === item.faction;
+                    })
+                    if(factionIndex > -1) {
+                        //We have the faction already in the db.
+                        const factionWins = updatedPlayer.factionsPlayed[factionIndex].wins;
+                        updatedPlayer.factionsPlayed[factionIndex].plays++;
+                        updatedPlayer.factionsPlayed[factionIndex].wins = game.victor === item.name ? factionWins + 1 : factionWins;
+
+                    }
+                    else
+                    {
+                        //we do not have the faction already in the db. Create a new entry.
+                        let newFactionEntry = {
+                            name: item.faction,
+                            plays: 1,
+                            wins: game.victor === item.name ? 1 : 0,
+                        }
+                        updatedPlayer.factionsPlayed.push(newFactionEntry);
+                        updatedPlayer.factionsPlayed.sort();
+                    }
+                    set(ref(database, 'players/' + item.name), updatedPlayer);
+                }
+                else {
+                    //create new entry for player.
+                    let newPlayer = {
+                        wins: game.victor === item.name ? 1 : 0,
+                        gamesPlayed: 1,
+                        factionsPlayed: [
+                            {
+                                name: item.faction,
+                                plays: 1,
+                                wins: game.victor === item.name ? 1 : 0,
+                            }
+                        ]
+                    }
+                    set(ref(database, 'players/' + item.name), newPlayer);
+                }
+            })
+        })
         //console.log('games/game' + Math.random());
         populateData();
     }
@@ -132,7 +202,7 @@ function MainPage() {
             <NavigationMenu/>
             {gameList && <CardOrganizer cardList={gameList}/>}
             <button onClick={addGameButtonHandler} style={{alignSelf: 'flex-end'}}>Add</button>
-            {addingGame && <AddGame closeHandler={closeAddGameHandler} submitHandler={addGameSubmitHandler}/>}
+            {addingGame && <AddGame closeHandler={closeAddGameHandler} submitHandler={addGameSubmitHandler} factionList={factionList}/>}
         </div>
     );
 }

@@ -86,7 +86,7 @@ function AddGame(props) {
             players: players,
         }
         console.log(newGame);
-        //props.submitHandler(newGame);
+        props.submitHandler(newGame);
         setTitle("");
         setVictor("");
         setPointCount(undefined);
@@ -138,7 +138,7 @@ function AddGame(props) {
                     {players.map((item) => {
                         return(
                             <div key={Math.random()} className="addgame__formSection">
-                                <AddedPlayer key={keyId++} playerName={item.name} faction={item.faction} changePlayerFactionHandler={changePlayerFactionHandler} removePlayerHandler={removePlayer} victorSelectHandler={victorChangeHandler} victor={victor}/>
+                                <AddedPlayer key={keyId++} playerName={item.name} faction={item.faction} changePlayerFactionHandler={changePlayerFactionHandler} removePlayerHandler={removePlayer} victorSelectHandler={victorChangeHandler} victor={victor} factionList={props.factionList}/>
                             </div>
                         );
                     })}

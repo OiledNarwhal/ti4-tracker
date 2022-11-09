@@ -28,11 +28,6 @@ function GameCard(props) {
     setCardClicked(false);
   }
 
-  let factionList = '';
-    props.cardInfo.factions.forEach(item => {
-        factionList = factionList + item + ', ';
-    });
-    factionList = factionList.trim().slice(0, -1);
 
   return (
     <>
@@ -46,7 +41,6 @@ function GameCard(props) {
         </div>
         <div className="gamecard__content">
           <p>Victor: {props.cardInfo.victor}</p>
-          <p>Factions: {factionList}</p>
           <p>Point Count: {props.cardInfo.pointCount}</p>
         </div>
       </div>

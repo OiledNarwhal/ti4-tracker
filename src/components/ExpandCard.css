@@ -9,11 +9,12 @@
   }
 
   .header {
-    padding: 2rem;
+    padding: 1rem;
     margin: 0rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    border: 1px solid green;
   }
   .modal {
     position: fixed;
@@ -30,8 +31,13 @@
   }
 
   .content p {
-    padding: 1rem;
+    padding: 0rem;
     margin: 0rem;
+    border: 2px solid red;
+  }
+
+  .expandcard__players {
+    padding-left: 2rem;
   }
   
   .footer {

@@ -11,12 +11,6 @@ function ExpandCard(props) {
         playerList = playerList + item + ', ';
     });
     playerList = playerList.trim().slice(0, -1);
-
-    let factionList = '';
-    props.cardInfo.factions.forEach(item => {
-        factionList = factionList + item + ', ';
-    });
-    factionList = factionList.trim().slice(0, -1);
     return (
         <div>
             <div className="backdrop" onClick={closeModal}/>
@@ -26,9 +20,14 @@ function ExpandCard(props) {
                 </header>
                 <div className="content">
                     <p>Victor: {props.cardInfo.victor}</p>
-                    <p>Factions: {factionList}</p>
+                    <p>Date: {props.cardInfo.date}</p>
                     <p>Point Count: {props.cardInfo.pointCount}</p>
-                    <p>Players: {playerList}</p>
+                    <p>Players and Factions: </p>
+                    <div className="expandcard__players">
+                    {props.cardInfo.players.map((item) => {
+                        return (<p key={Math.random()} style={{color: item.name === props.cardInfo.victor ? 'gold' : 'white'}}>{item.name} - {item.faction}</p>)
+                    })}
+                    </div>
                 </div>
                 <footer className="footer">
                     <button onClick={closeModal}>Close</button>
