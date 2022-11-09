@@ -144,6 +144,8 @@ function MainPage() {
     }
 
     function addGameSubmitHandler(game) {
+        
+        //Add the new game
         set(ref(database, 'games/game' + gameList.length), game);
         
         //Update player information
@@ -193,8 +195,41 @@ function MainPage() {
                     set(ref(database, 'players/' + item.name), newPlayer);
                 }
             })
-        })
-        //console.log('games/game' + Math.random());
+        });
+
+        //Get existing faction information from db
+        let updatedFactionList = [];
+        get(child(testRef, 'factions')).then((snapshot) => {
+            updatedFactionList = snapshot.val();
+
+            //loop through each player in the added game.
+            game.players.forEach((player) => {
+                //Update faction statistic information based on player information.
+                //Find the index of the player's faction.
+                const factionIndex = updatedFactionList.findIndex((dbFaction) => {
+                    return dbFaction.name === player.faction;
+                });
+                if(factionIndex !== -1) {
+                    //If the faction exists, update its information
+                    const factionWins = updatedFactionList[factionIndex].wins;
+                    updatedFactionList[factionIndex].plays = updatedFactionList[factionIndex].plays + 1;
+                    updatedFactionList[factionIndex].wins = game.victor === player.name ? factionWins + 1 : factionWins;
+
+                }
+                else {
+                    //If the faction does not exist, create a new entry for it.
+                    const newFactionEntry = {
+                        name: player.faction,
+                        plays: 1,
+                        wins: game.victor === player.name ? 1 : 0,
+                    }
+                    updatedFactionList.push(newFactionEntry);
+                }
+            });
+
+            //Update the faction information list in the database (outside of the forEach so we do not overwrite changes).
+            set(ref(database, 'factions'), updatedFactionList);
+        });
         populateData();
     }
         return (
