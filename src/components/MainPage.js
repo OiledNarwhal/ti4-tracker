@@ -2,6 +2,8 @@ import CardOrganizer from "./CardOrganizer";
 import NavigationMenu from "./NavigationMenu";
 import AddGame from "./AddGame";
 import { useState, useEffect } from "react";
+import TitleBar from "./TitleBar";
+import StatisticsPage from "./Statistics/StatisticsPage";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -37,6 +39,7 @@ function MainPage() {
     async function populateData()
     {
         
+        //Get Game data to display
         await get(child(testRef, 'games')).then((snapshot) => {
             let cards = [];
             if(snapshot.exists()) {
@@ -44,7 +47,6 @@ function MainPage() {
                 {
                     cards.push(snapshot.val()[game]);
                 };
-                //await cards = Object.entries(snapshot.val());
             }
             else {
                 console.log('No game data available');
@@ -54,6 +56,7 @@ function MainPage() {
             console.error(error);
         }))
 
+        //Get our predefined list of factions
         await get(child(testRef, 'factionList')).then((snapshot) => {
             let pulledFactions = [];
             if(snapshot.exists()) {
@@ -66,9 +69,36 @@ function MainPage() {
         }).catch((error) => {
             console.log(error);
         })
-        
-       console.log('here');
-       //setGameList(dummyCards);
+
+        //Get our Player statistics
+        await get(child(testRef, 'players')).then((snapshot) => {
+            if(snapshot.exists()) {
+                setPlayerStats(snapshot.val());
+            }
+            else {
+                console.log('No player statistics data available');
+            }
+        }).catch((error => {
+            console.error(error);
+        }))
+        console.log('here');
+
+        //Get our Factions statistics
+        await get(child(testRef, 'factions')).then((snapshot) => {
+            let factions = [];
+            if(snapshot.exists()) {
+                for(const faction in snapshot.val())
+                {
+                    factions.push(snapshot.val()[faction]);
+                };
+            }
+            else {
+                console.log('No faction statistics data available');
+            }
+            setFactionStats(factions);
+        }).catch((error => {
+            console.error(error);
+        }))
 
     }
     /*
@@ -96,40 +126,11 @@ function MainPage() {
     */
 
     const [addingGame, setAddingGame] = useState(false);
-
-    let dummyCards = [
-        {
-            title: "The Turtles Strike back",
-            date: "2022-07-14",
-            victor: "Stephen",
-            pointCount: "14",
-            players: [
-                {
-                    name: "Stephen",
-                    faction: "The Arborec"
-                },
-                {
-                    name: "Bryce",
-                    faction: "The Barony of Letnev"
-                },
-                {
-                    name: "Amy",
-                    faction: "Federation of Sol"
-                },
-                {
-                    name: "Matthew",
-                    faction: "The Arborec"
-                },
-                {
-                    name: "Jake",
-                    faction: "The Barony of Letnev"
-                }
-            ]
-        }
-    ];
-
     const [factionList, setFactionList] = useState(false);
     const [gameList, setGameList] = useState(undefined);
+    const [currPage, setCurrPage] = useState("games");
+    const [playerStats, setPlayerStats] = useState(undefined);
+    const [factionStats, setFactionStats] = useState(undefined);
     useEffect(() => {
         populateData();
     }, []);
@@ -141,6 +142,12 @@ function MainPage() {
     }
     function closeAddGameHandler() {
         setAddingGame(false);
+    }
+    function gamePage() {
+        setCurrPage("games");
+    }
+    function statsPage() {
+        setCurrPage("stats");
     }
 
     function addGameSubmitHandler(game) {
@@ -233,12 +240,20 @@ function MainPage() {
         populateData();
     }
         return (
-        <div className='mainpage'>
-            <NavigationMenu/>
-            {gameList && <CardOrganizer cardList={gameList}/>}
-            <button onClick={addGameButtonHandler} style={{alignSelf: 'flex-end'}}>Add</button>
-            {addingGame && <AddGame closeHandler={closeAddGameHandler} submitHandler={addGameSubmitHandler} factionList={factionList}/>}
-        </div>
+            <div>
+                <div className="mainpage__titleBar">
+                    <TitleBar/>
+                    <NavigationMenu gamesPageHandler={gamePage} statsPageHandler={statsPage}/>
+                </div>
+                {currPage === "games" && <div className='mainpage'>
+                    {gameList && <CardOrganizer cardList={gameList}/>}
+                    <button onClick={addGameButtonHandler}>Add</button>
+                    {addingGame && <AddGame className="mainpage__addButton" closeHandler={closeAddGameHandler} submitHandler={addGameSubmitHandler} factionList={factionList}/>}
+                </div>}
+                {currPage === "stats" && <div className='mainpage'>
+                    <StatisticsPage playerStats={playerStats} factionStats={factionStats}/>
+                </div>}
+            </div>
     );
 }
 

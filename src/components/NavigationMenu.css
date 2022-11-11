@@ -1,6 +1,16 @@
 .navigationmenu {
     height: 100%;
-    width: 10%;
+    width: fit-content;
     border: 2px solid white;
-    color: white;
+    color: black;
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    gap: 0.5rem;
+    padding-right: 2rem;
 }
+
+.navigationmenu button {
+    width: fit-content;
+    height: 100%;
+}   

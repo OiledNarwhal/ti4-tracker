@@ -1,8 +1,6 @@
 import './AddGame.css';
 import { useState } from 'react';
 import ArrayAdder from './ArrayAdder';
-import ElementButton from './ElementButton';
-import FactionAdder from './FactionAdder';
 import AddedPlayer from './AddGame/AddedPlayer';
 
 function AddGame(props) {
@@ -12,7 +10,6 @@ function AddGame(props) {
     const [victor, setVictor] = useState();
     const [pointCount, setPointCount] = useState();
     const [gameDate, setGameDate] = useState();
-    const [factions, setFactions] = useState([]);
     const [players, setPlayers] = useState([]);
 
     //input field state changes
@@ -59,17 +56,6 @@ function AddGame(props) {
         setPlayers([...dummyArray]);
     }
 
-    function addFaction(faction) {
-        setFactions([...factions, faction]);
-    }
-    function removeFaction(faction) {
-        let index = factions.indexOf(faction);
-        console.log(index);
-        let dummyArray = factions;
-        dummyArray.splice(index, 1)
-        setFactions([...dummyArray]);
-    }
-
 
     function submitHandler(event){
         event.preventDefault();
@@ -96,11 +82,6 @@ function AddGame(props) {
     let playerList = '';
     players.forEach(item => {
         playerList = playerList + item + ', ';
-    });
-
-    let factionList = '';
-    factions.forEach(item => {
-        factionList = factionList + item + ', ';
     });
     let keyId = 0;
     return (

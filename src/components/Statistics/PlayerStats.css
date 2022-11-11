@@ -1,0 +1,9 @@
+.playerStats {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.playerStats__chart {
+    background-color: white;
+}

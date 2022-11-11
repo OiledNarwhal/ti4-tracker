@@ -8,3 +8,17 @@
     flex-direction: row;
     justify-content: flex-start;
 }
+.mainpage button {
+    height: fit-content;
+    width: fit-content;
+    align-self: center;
+}
+
+.mainpage__titleBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+    background-color: blue;
+    border: 2px solid red;
+}

@@ -1,8 +1,11 @@
 import './NavigationMenu.css';
-function NavigationMenu()
+function NavigationMenu(props)
 {
     return (
-        <div className="navigationmenu">Navigation Placeholder</div>
+        <div className="navigationmenu">
+            <button onClick={props.gamesPageHandler}>Games</button>
+            <button onClick={props.statsPageHandler}>Statistics</button>
+        </div>
     );
 }
 

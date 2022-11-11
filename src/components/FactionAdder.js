@@ -3,7 +3,6 @@ import FactionList from "./FactionList";
 function FactionAdder(props) {
 
     const [input, setInput] = useState("");
-    const [focus, setFocus] = useState(false);
     
     function addClickHandler(item)
     {
@@ -15,17 +14,6 @@ function FactionAdder(props) {
     function inputChangeHandler(event)
     {
         setInput(event.target.value);
-    }
-    function handleFocus()
-    {
-        setFocus(true);
-    }
-    function handleBlur(event)
-    {
-        if(document.activeElement !== document.getElementById("popup-faction-list"))
-        {
-            setFocus(false);
-        }
     }
     return (
         <div>
