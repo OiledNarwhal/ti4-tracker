@@ -1,9 +1,46 @@
 .playerStats {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-content: center;
     padding: 2rem;
+    padding-top: 0rem;
+    gap: 2rem;
+}
+
+.playerStats h3 {
+    color: white;
+    margin: 0rem;
+    padding: 2rem;
+    border-bottom: 2px solid white;
+    text-align: center;
 }
 
 .playerStats__chart {
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 5%;
+}
+
+.playerStats__chart label{
+    background-color: white;
+    text-align: center;
+    border-bottom: 1px solid black;
+    width: 90%;
+    align-self: center;
+    justify-self: center;
+}
+.playerStats__selector {
+    padding-left: 1rem;
+    border-bottom: 1px solid black;
+    align-self: center;
+    width: 90%;
+    padding-bottom: 0.5rem;
+}
+
+.playerStats__selector select {
+    text-align-last: right;
 }
