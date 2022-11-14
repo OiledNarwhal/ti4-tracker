@@ -6,5 +6,6 @@
     flex-wrap: wrap;
     column-gap: 15px;
     padding-top: 5px;
-    width: 75%
+    width: 100%;
+    border: 2px solid green;
 }
