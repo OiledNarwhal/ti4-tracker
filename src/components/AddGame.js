@@ -7,9 +7,9 @@ function AddGame(props) {
     //States for input fields
     const [progress, setProgress] = useState(0);
     const [title, setTitle] = useState("");
-    const [victor, setVictor] = useState();
-    const [pointCount, setPointCount] = useState();
-    const [gameDate, setGameDate] = useState();
+    const [victor, setVictor] = useState("");
+    const [pointCount, setPointCount] = useState(undefined);
+    const [gameDate, setGameDate] = useState(undefined);
     const [players, setPlayers] = useState([]);
 
     //input field state changes
@@ -27,7 +27,65 @@ function AddGame(props) {
         console.log(event.target.value);
         setGameDate(event.target.value);
     }
+    //Make sure input is good before moving to the next step.
     function progressHandler() {
+        //First step input check.
+        if(progress === 0)
+        {
+            if(title.length === 0)
+            {
+                //Bad input.
+                alert("Please enter a Game Title before proceeding.");
+                return;
+            }
+            else if(pointCount === undefined)
+            {
+                alert("Please enter a Point Count before proceeding.");
+                return;
+            }
+            else if(gameDate === undefined)
+            {
+                alert("Please enter a Game Date before proceeding.");
+                return;
+            }
+        }
+        //Second step input check.
+        else if(progress === 1) {
+            if(players.length === 0)
+            {
+                alert("Please add players before proceeding.");
+                return;
+            }
+            else if((players.findIndex((player) => {
+                return (player.faction === undefined || player.faction === '--Please Select a Faction--');
+            })) !== -1) {
+                alert("Please assign each Player a Faction before proceeding.");
+                return;
+            }
+            else if(victor.length === 0)
+            {
+                alert("Please select one player as the Victor before proceeding.");
+                return;
+            }
+            else {
+                let factionDupe = false;
+                let indexer = 0;
+                players.forEach((player, index) => {
+                    indexer = players.findIndex((innerPlayer, innerIndex) => {
+                        return (player.faction === innerPlayer.faction && index !== innerIndex);
+                    })
+                    if(indexer !== -1)
+                    {
+                        factionDupe = true;
+                    }
+                });
+                if(factionDupe)
+                {
+                    alert("Please ensure all players are assigned to unique factions before proceeding.");
+                    return;
+                }
+            }
+        }
         setProgress(progress + 1);
     }
     function reduceProgressHandler() {
@@ -75,6 +133,7 @@ function AddGame(props) {
         props.submitHandler(newGame);
         setTitle("");
         setVictor("");
+        setGameDate(undefined);
         setPointCount(undefined);
         setPlayers([]);
         props.closeHandler();
@@ -84,16 +143,26 @@ function AddGame(props) {
         playerList = playerList + item + ', ';
     });
     let keyId = 0;
+    let factionIcons = [];
+    players.forEach((player) => {
+        if(player.faction !== undefined) {
+            factionIcons.push(require(`../factionImages/VectorIcons/${player.faction}.png`));
+        }
+    })
     return (
         <div>
             <div className="addgame__backdrop" onClick={props.closeHandler}/>
             <div className="addgame__modal">
-                <button className="addgame__closeButton" onClick={props.closeHandler}>Close</button>
-                <header className="addgame__header">
-                    <h2>Add Game</h2>
-                </header>
+                <div className="addgame__top">
+                    <header className="addgame__header">
+                        <h2>Add Game {`(Step ${progress + 1} of 3)`}</h2>
+                    </header>
+                    <div className="addgame__closeButton">
+                        <button onClick={props.closeHandler}>Close</button>
+                    </div>
+                </div>
                 {progress === 0 && <div className="addgame__content">
-                    <p>Please Enter the Game's Information, then hit "Next". </p>
+                    <p>Please Enter the Game's Information, then click "Next." </p>
                     <form>
                         <div className="addgame__formsection">
                             <label>Game Title:</label>
@@ -112,13 +181,13 @@ function AddGame(props) {
                     </form>
                 </div>}
                 {progress === 1 && <div className="addgame__content">
-                    <p>Please add players and assign them a faction.</p>
+                    <p>Please add players and assign them a faction. Then click "Next."</p>
                     <div className="addgame__formsection">
                         <ArrayAdder title={"Player:"} addElementFunction={addPlayer}/>
                     </div>
                     {players.map((item) => {
                         return(
-                            <div key={Math.random()} className="addgame__formSection">
+                            <div key={Math.random()} className="addgame__players">
                                 <AddedPlayer key={keyId++} playerName={item.name} faction={item.faction} changePlayerFactionHandler={changePlayerFactionHandler} removePlayerHandler={removePlayer} victorSelectHandler={victorChangeHandler} victor={victor} factionList={props.factionList}/>
                             </div>
                         );
@@ -132,9 +201,15 @@ function AddGame(props) {
                         <label>Point Count: {pointCount}</label>
                         <label>Date: {gameDate}</label>
                         <label>Players: </label>
-                        {players.map((item) => {
-                            return (<label key={Math.random()} style={{paddingLeft: '3rem', color: victor === item.name ? 'gold' : 'white'}}>{item.name} - {item.faction}</label>)
+                        <div className="addgame_reviewPlayers">
+                        {players.map((item, index) => {
+                            return (
+                            <div className="addgame__reviewPlayersContainer">
+                                <label key={Math.random()} style={{paddingLeft: '5vw', color: victor === item.name ? 'gold' : 'white'}}>{item.name} - {item.faction}</label>
+                                <img key={`player icon ${index}`} src={factionIcons[index]} className="addgame__reviewImage" alt="An icon for the player's faction"/>
+                            </div>)
                         })}
+                        </div>
                     </div>
                 </div>}
                 <footer style={{justifyContent: progress > 0 ? "space-between" : "flex-end"}}className="addgame__footer">

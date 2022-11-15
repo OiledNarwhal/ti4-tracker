@@ -25,7 +25,14 @@ function AddedPlayer(props) {
     function victorChangeHandler() {
         props.victorSelectHandler(playerInfo.name);
     }
-    const factionList = props.factionList.sort();
+    let factionList = props.factionList.sort();
+    if((factionList.findIndex((item) => {
+        return item === "--Please Select a Faction--"
+    })) === -1)
+    {
+        factionList.push("--Please Select a Faction--");
+        factionList.sort();
+    }
 
     useEffect(() => {
         if(playerInfo.faction !== undefined)

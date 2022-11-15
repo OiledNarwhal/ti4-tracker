@@ -2,6 +2,7 @@
 .addedplayer {
     display: flex;
     flex-direction: row;
+    width: 80%;
     justify-content: space-between;
     padding-right: 1rem;
 }
