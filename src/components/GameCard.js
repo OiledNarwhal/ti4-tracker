@@ -2,7 +2,6 @@ import "./GameCard.css";
 //import image from ".././ti4.jpg";
 import { useState } from "react";
 import ExpandCard from "./ExpandCard";
-import mec from "../factionImages/Mecatol Rex.png";
 import vp from "../factionImages/CustodiansVP.png";
 import date from '../Date Icon.png';
 
@@ -25,7 +24,7 @@ function GameCard(props) {
   const [cardClicked, setCardClicked] = useState(false);
 
   function cardClickHandler() {
-    setCardClicked(true);
+    setCardClicked(!cardClicked);
   }
   function closeModal() {
     setCardClicked(false);
@@ -36,16 +35,19 @@ function GameCard(props) {
   const factionCardBack = require(`../factionImages/FactionCardBacks/${props.cardInfo.players[victorIndex].faction}.png`);
   const factionHomeSystem = require(`../factionImages/HomeSystems/${props.cardInfo.players[victorIndex].faction}.png`);
   const factionImage = require(`../factionImages/${props.cardInfo.players[victorIndex].faction}.png`);
+  let factionIcons = [];
+  props.cardInfo.players.forEach((player) => {
+    factionIcons.push(require(`../factionImages/VectorIcons/${player.faction}.png`));
+  })
 
   //<img src={factionImage} className="gamecard__faction" alt="TI4 Base" />
+  //Used to be the click interaction: <ExpandCard cardInfo={props.cardInfo} closeModal={closeModal} />
 
 
   return (
     <>
-      {cardClicked && (
-        <ExpandCard cardInfo={props.cardInfo} closeModal={closeModal} />
-      )}
       <div className="gamecard" onClick={cardClickHandler}>
+        {!cardClicked && <div>
         <img src={factionCardBack} className="gamecard__image" alt="mecatol Rex"/>
         <div className="gamecard__positioning">
           <div className="gamecard__title">
@@ -65,6 +67,25 @@ function GameCard(props) {
             </div>
           </div>
         </div>
+        </div>}
+        {cardClicked && <div>
+            <div className="gamecard__title">
+              <h2>{props.cardInfo.title}</h2>
+            </div>
+            <div className="gamecard__backContent">
+              <p>Date: {props.cardInfo.date}</p>
+              <p>Point Count: {props.cardInfo.pointCount}</p>
+              <p>Players and Factions: </p>
+              <div className="gamecard__backPlayers">
+                {props.cardInfo.players.map((item, index) => {
+                    return (<div key={`player ${index} div`} className="gamecard__backPlayerContainer">
+                      <p key={`player ${index}`} style={{color: item.name === props.cardInfo.victor ? 'gold' : 'white'}}>{item.name} - {item.faction}</p>
+                      <img key={`player icon ${index}`} src={factionIcons[index]} className="gamecard__backFactionImage" alt="An icon for the player's faction"/>
+                    </div>)
+                })}
+              </div>
+            </div>
+          </div>}
       </div>
     </>
   );

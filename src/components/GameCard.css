@@ -5,10 +5,12 @@
     align-items: center;
     width: 17%;
     max-width: 200;
+    min-width: 200px;
+    height: 25vw;
+    min-height: 300px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.25);
     padding: 0px;
     border-radius: 10% / 25%;
-    height: auto;
     transition: all .2s ease-in-out;
     color: white;
     position: relative;
@@ -22,8 +24,9 @@
 .gamecard__content {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     width: 80%;
+    height: 100%;
 }
 .gamecard__content p {
     padding: 0rem;
@@ -112,4 +115,39 @@
     align-items: center;
     justify-items: center;
     z-index: 1;
+}
+
+.gamecard__backContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 85%;
+    justify-self: center;
+    align-self: center;
+    font-size: 1vw;
+}
+.gamecard__backContent p {
+    padding: 0rem;
+    margin: 0rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.gamecard__backPlayers {
+    padding-left: 1rem;
+    font-size: 0.9vw;
+    width: 100%;
+}
+
+.gamecard__backPlayerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.gamecard__backFactionImage {
+    height: 8%;
+    width: 8%;
+    align-self: center;
 }

@@ -18,13 +18,14 @@
   }
   .modal {
     position: fixed;
-    top: 30vh;
+    top: 20vh;
     left: 30%;
     width: 40%;
     z-index: 100;
     overflow: hidden;
     background-color: #2c0fa6;
     color: white;
+    border-radius: 7%;
   }
   .content {
     padding: 1rem;
