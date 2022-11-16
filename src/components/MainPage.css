@@ -19,6 +19,37 @@
     flex-direction: row;
     justify-content: space-between;
     align-content: center;
-    background-color: blue;
-    border: 2px solid red;
+    background-color: #00549E;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    height: 6%;
 }
+
+.mainPage__addButtonContainer {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    justify-content: center;
+    height: 5%;
+    width: auto;
+    padding-top: 2rem;
+}
+.mainpage__addImage {
+    height: 100%;
+    width: 100%;
+}
+.mainpage__addImage:hover {
+    animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+    from {
+      transform: rotate(0deg) scale(1.05);
+    }
+    to {
+      transform: rotate(360deg) scale(1.05);
+    }
+  }

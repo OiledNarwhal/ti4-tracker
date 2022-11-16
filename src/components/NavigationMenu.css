@@ -1,16 +1,20 @@
 .navigationmenu {
     height: 100%;
     width: fit-content;
-    border: 2px solid white;
-    color: black;
+    color: white;
     display: flex;
     flex-direction: row;
     align-self: center;
-    gap: 0.5rem;
-    padding-right: 2rem;
 }
 
 .navigationmenu button {
-    width: fit-content;
+    width: calc(2rem + 3vw);
     height: 100%;
+    font-size: calc(8px + 0.5vw);
+    color: white;
+    background-color: #00549E;
+    border: 1px solid #0262b8;
 }   
+.navigationmenu button:hover {
+    background-color: #057ae3;
+}

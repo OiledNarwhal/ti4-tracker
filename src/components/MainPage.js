@@ -239,15 +239,18 @@ function MainPage() {
         });
         populateData();
     }
+        const addImage = require('../Blue Add Button.png');
         return (
             <div>
                 <div className="mainpage__titleBar">
                     <TitleBar/>
-                    <NavigationMenu gamesPageHandler={gamePage} statsPageHandler={statsPage}/>
+                    <NavigationMenu gamesPageHandler={gamePage} statsPageHandler={statsPage} currPage={currPage}/>
                 </div>
                 {currPage === "games" && <div className='mainpage'>
                     {gameList && <CardOrganizer cardList={gameList}/>}
-                    <button onClick={addGameButtonHandler}>Add</button>
+                    <div className="mainPage__addButtonContainer">
+                        <img className="mainpage__addImage" src={addImage} alt="An icon denoting the ability to add games" onClick={addGameButtonHandler}/>
+                    </div>
                     {addingGame && <AddGame className="mainpage__addButton" closeHandler={closeAddGameHandler} submitHandler={addGameSubmitHandler} factionList={factionList}/>}
                 </div>}
                 {currPage === "stats" && <div className='mainpage'>
